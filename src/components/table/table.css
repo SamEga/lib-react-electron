@@ -1,0 +1,15 @@
+table {
+  margin-bottom: 0 !important;
+}
+
+thead th {
+  position: sticky;
+  top: 0;
+}
+
+main {
+  max-height: 600px;
+  overflow: auto;
+  border-bottom: 1px solid #dee2e6;
+  margin-top: 1rem;
+}
