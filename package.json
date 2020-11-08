@@ -20,6 +20,7 @@
     "bootstrap": "^4.5.3",
     "concurrently": "^5.3.0",
     "cross-env": "^7.0.2",
+    "electron-is-dev": "^1.2.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.0",
@@ -29,8 +30,7 @@
   },
   "devDependencies": {
     "electron": "^10.1.5",
-    "electron-builder": "^22.9.1",
-    "electron-is-dev": "^1.2.0"
+    "electron-builder": "^22.9.1"
   },
   "scripts": {
     "react-start": "react-scripts start",
@@ -38,7 +38,7 @@
     "react-test": "react-scripts test --env=jsdom",
     "react-eject": "react-scripts eject",
     "electron-build": "electron-builder",
-    "release": "npm run react-build && electron-builder --publish=always",
+    "release": "npm run react-build && electron-builder --publish=never",
     "build": "npm run react-build && npm run electron-build",
     "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\""
   },

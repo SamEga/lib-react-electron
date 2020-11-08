@@ -7,9 +7,12 @@ body {
 }
 
 button {
-  margin: 1rem;
-  margin-top: 0;
+  margin: 0 1rem 1rem;
   cursor: pointer;
+}
+
+.btn-save {
+  margin-left: auto;
 }
 
 .form {

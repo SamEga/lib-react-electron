@@ -12,6 +12,8 @@ export interface TableParameter {
 }
 
 export class App extends Component {
+  readonly STORAGE_NAME: string = "library";
+
   state: State = {
     activeItem: {
       publishing: "",
@@ -20,23 +22,12 @@ export class App extends Component {
       "book-year": "",
     },
     activeItemIndex: null,
-    books: [
-      {
-        publishing: "Anastasie Arnall",
-        "book-title": "Atomic Brain, The",
-        genre: "Horror|Sci-Fi",
-        "book-year": "2020-11-04",
-        id: 1,
-      },
-      {
-        publishing: "Elwyn Sitlinton",
-        "book-title": "Antibodies (Antikörper)",
-        genre: "Crime|Drama|Horror|Thriller",
-        "book-year": "2020-11-03",
-        id: 2,
-      },
-    ],
+    books: [],
   };
+
+  componentDidMount(): void {
+    this.getDataFromStorage();
+  }
 
   submitForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -62,7 +53,7 @@ export class App extends Component {
   };
 
   editItem = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const books = Object.assign({}, this.state.books);
+    const { books } = this.state;
     if (this.state.activeItemIndex !== null) {
       books[this.state.activeItemIndex] = this.state.activeItem;
     }
@@ -83,17 +74,29 @@ export class App extends Component {
     this.setState({ activeItem: active, activeItemIndex: index });
   };
 
+  getDataFromStorage = () => {
+    const books = localStorage.getItem(this.STORAGE_NAME);
+    console.log(books);
+    if (books) {
+      this.setState({ books: JSON.parse(books) });
+    }
+  };
+
+  saveDataInStorage = (): void => {
+    localStorage.setItem(this.STORAGE_NAME, JSON.stringify(this.state.books));
+  };
+
   onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { activeItem } = this.state;
     activeItem[event.target["id"]] = event.target.value;
     this.setState({ activeItem });
   };
 
-  btnsParams: Array<btnProp> = [
+  btnParams: Array<btnProp> = [
     { type: "submit", title: "Добавить", className: "btn btn-success", cb: () => {} },
     { type: "button", title: "Сохранить изменения", className: "btn btn-outline-info", cb: this.editItem },
     { type: "button", title: "Удалить", className: "btn btn-outline-danger", cb: this.deleteItem },
-    { type: "button", title: "Сохранить данные в документ", className: "btn btn-primary", cb: () => {} },
+    { type: "button", title: "Сохранить данные", className: "btn btn-primary btn-save", cb: this.saveDataInStorage },
   ];
 
   tableParams: Array<TableParameter> = [
@@ -110,7 +113,7 @@ export class App extends Component {
           tableParams={this.tableParams}
           activeItem={this.state.activeItem}
           submit={this.submitForm}
-          btnData={this.btnsParams}
+          btnData={this.btnParams}
         />
         <Table
           tableParams={this.tableParams}
