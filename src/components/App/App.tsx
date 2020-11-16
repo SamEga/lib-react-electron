@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { Form } from "../form/form";
 import { Table } from "../table/table";
 import { Book, btnProp, State } from "../models";
+import { StorageService } from "../../services/storage.service";
 
 export interface TableParameter {
   title: string;
@@ -12,7 +13,7 @@ export interface TableParameter {
 }
 
 export class App extends Component {
-  readonly STORAGE_NAME: string = "library";
+  storage = new StorageService(window.localStorage);
 
   state: State = {
     activeItem: {
@@ -28,6 +29,17 @@ export class App extends Component {
   componentDidMount(): void {
     this.getDataFromStorage();
   }
+
+  getDataFromStorage = () => {
+    const books = this.storage.getData();
+    if (books) {
+      this.setState({ books });
+    }
+  };
+
+  saveDataInStorage = (): void => {
+    this.storage.saveData(this.state.books);
+  };
 
   submitForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -72,18 +84,6 @@ export class App extends Component {
   selectItem = (activeItem: Book, index: number) => {
     const active = Object.assign({}, activeItem);
     this.setState({ activeItem: active, activeItemIndex: index });
-  };
-
-  getDataFromStorage = () => {
-    const books = localStorage.getItem(this.STORAGE_NAME);
-    console.log(books);
-    if (books) {
-      this.setState({ books: JSON.parse(books) });
-    }
-  };
-
-  saveDataInStorage = (): void => {
-    localStorage.setItem(this.STORAGE_NAME, JSON.stringify(this.state.books));
   };
 
   onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
